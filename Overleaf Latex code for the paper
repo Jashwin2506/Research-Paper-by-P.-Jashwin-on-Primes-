@@ -1,0 +1,218 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{pgfplots}
+\usepackage{float}
+\geometry{margin=1in}
+\pgfplotsset{compat=1.18}
+
+\title{A Comparative Study of Prime Number Generation Algorithms}
+\author{Independent Student Project}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Prime numbers are one of the most important concepts in mathematics, especially because of their role in cryptography and computational systems. In this project, three prime generation algorithms were compared: Basic Trial Division, Optimized Trial Division, and the Sieve of Eratosthenes. All algorithms were implemented in Python and benchmarked across increasing input sizes. The results demonstrate that algorithmic design has a major impact on performance. While optimized trial division significantly improved upon the basic approach, the Sieve of Eratosthenes consistently produced the fastest runtimes and remained practical even for input sizes up to ten million.
+\end{abstract}
+
+\section{Introduction}
+
+Prime numbers are integers greater than 1 that are divisible only by 1 and themselves. They play an important role in number theory, cryptography, and computer science.
+
+This project investigates the following question:
+
+\begin{quote}
+How does algorithm choice affect the efficiency of prime number generation as input size increases?
+\end{quote}
+
+To answer this question, three different algorithms were implemented and tested using Python.
+
+\section{Algorithms}
+
+\subsection{Basic Trial Division}
+
+Basic trial division checks every possible divisor from 2 to $n-1$. Although simple, it performs many unnecessary checks and becomes inefficient for large values of $n$.
+
+\subsection{Optimized Trial Division}
+
+A mathematical observation allows trial division to be improved. If a number has a factor, at least one factor must be less than or equal to $\sqrt{n}$. Therefore only divisors up to $\sqrt{n}$ need to be checked.
+
+\subsection{Sieve of Eratosthenes}
+
+The Sieve of Eratosthenes generates all primes up to a given limit by systematically eliminating multiples of known primes. Instead of testing each number individually, it removes composite numbers from consideration.
+
+\section{Methodology}
+
+All algorithms were implemented in Python. Runtime measurements were recorded using \texttt{time.perf\_counter()}.
+
+Input sizes tested included:
+
+\begin{itemize}
+\item 1,000
+\item 10,000
+\item 100,000
+\item 1,000,000
+\end{itemize}
+
+Additional tests were conducted for the Sieve of Eratosthenes at:
+
+\begin{itemize}
+\item 2,000,000
+\item 5,000,000
+\item 10,000,000
+\end{itemize}
+
+\section{Results}
+
+\subsection{Runtime Comparison}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lccc@{}}
+\toprule
+N & Basic Trial (s) & Optimized Trial (s) & Sieve (s) \\
+\midrule
+1,000 & 0.005716 & 0.001019 & 0.000200 \\
+10,000 & 0.336668 & 0.018171 & 0.001334 \\
+100,000 & 35.614135 & 0.312417 & 0.014771 \\
+1,000,000 & -- & 6.531927 & 0.153436 \\
+\bottomrule
+\end{tabular}
+\caption{Runtime comparison of prime generation algorithms.}
+\end{table}
+
+\subsection{Extended Sieve Results}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\toprule
+N & Primes Found & Time (s) \\
+\midrule
+2,000,000 & 148,933 & 0.484488 \\
+5,000,000 & 348,513 & 1.936409 \\
+10,000,000 & 664,579 & 3.719366 \\
+\bottomrule
+\end{tabular}
+\caption{Extended benchmark results for the Sieve of Eratosthenes.}
+\end{table}
+
+\section{Graphs}
+
+\subsection{Runtime Comparison}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+width=13cm,
+height=8cm,
+xmode=log,
+ymode=log,
+xlabel={Input Size ($N$)},
+ylabel={Runtime (seconds)},
+title={Runtime Comparison of Prime Generation Algorithms},
+legend pos=north west,
+grid=major]
+
+\addplot coordinates {
+(1000,0.005716)
+(10000,0.336668)
+(100000,35.614135)
+};
+\addlegendentry{Basic Trial Division}
+
+\addplot coordinates {
+(1000,0.001019)
+(10000,0.018171)
+(100000,0.312417)
+(1000000,6.531927)
+};
+\addlegendentry{Optimized Trial Division}
+
+\addplot coordinates {
+(1000,0.000200)
+(10000,0.001334)
+(100000,0.014771)
+(1000000,0.153436)
+(2000000,0.484488)
+(5000000,1.936409)
+(10000000,3.719366)
+};
+\addlegendentry{Sieve of Eratosthenes}
+
+\end{axis}
+\end{tikzpicture}
+\caption{Runtime comparison on logarithmic scales.}
+\end{figure}
+
+\subsection{Scaling of the Sieve of Eratosthenes}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+width=13cm,
+height=8cm,
+xmode=log,
+ymode=log,
+xlabel={Input Size ($N$)},
+ylabel={Runtime (seconds)},
+title={Scaling Behaviour of the Sieve of Eratosthenes},
+grid=major]
+
+\addplot coordinates {
+(1000,0.000200)
+(10000,0.001334)
+(100000,0.014771)
+(1000000,0.153436)
+(2000000,0.484488)
+(5000000,1.936409)
+(10000000,3.719366)
+};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Runtime growth of the Sieve of Eratosthenes.}
+\end{figure}
+
+\section{Discussion}
+
+The results demonstrate that algorithm choice has a significant effect on computational performance.
+
+Basic trial division became impractical as the input size increased. At $N=100,000$, the runtime exceeded 35 seconds. The optimized trial division algorithm significantly reduced runtime by limiting divisor checks to $\sqrt{n}$.
+
+The Sieve of Eratosthenes consistently outperformed both trial division methods. The performance gap widened as the input size increased, indicating superior scalability.
+
+The graphs visually confirm these findings and show that the sieve remained practical even when generating all primes up to ten million.
+
+\section{Conclusion}
+
+This project compared three methods for generating prime numbers: Basic Trial Division, Optimized Trial Division, and the Sieve of Eratosthenes.
+
+The results showed that:
+
+\begin{itemize}
+\item The square-root optimization dramatically improved trial division.
+\item The Sieve of Eratosthenes was the fastest algorithm at every tested input size.
+\item The performance advantage of the sieve increased as the input size grew.
+\item Basic trial division became impractical for sufficiently large values of $N$.
+\end{itemize}
+
+Overall, the Sieve of Eratosthenes proved to be the most effective method for generating large collections of prime numbers.
+
+\section*{References}
+
+\begin{itemize}
+\item Rosen, K. H. \textit{Elementary Number Theory and Its Applications}.
+\item Crandall, R. and Pomerance, C. \textit{Prime Numbers: A Computational Perspective}.
+\item Python Software Foundation Documentation.
+\end{itemize}
+
+\end{document}
