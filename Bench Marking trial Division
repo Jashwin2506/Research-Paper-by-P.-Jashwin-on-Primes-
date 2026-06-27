@@ -1,0 +1,44 @@
+import time
+
+def is_prime(num):
+    """Check if a number is prime using basic trial division."""
+    if num < 2:
+        return False
+
+    for i in range(2, num):
+        if num % i == 0:
+            return False
+
+    return True
+
+
+def primes_up_to(n):
+    """Return a list of all primes <= n by checking each number one by one."""
+    result = []
+
+    for num in range(2, n + 1):
+        if is_prime(num):
+            result.append(num)
+
+    return result
+
+
+test_values = [1000, 10000, 100000]
+
+print("Benchmarking Trial Division")
+print("-" * 50)
+
+for n in test_values:
+    start = time.perf_counter()
+
+    primes = primes_up_to(n)
+
+    end = time.perf_counter()
+
+    runtime = end - start
+
+    print(
+        f"N = {n:<8} "
+        f"Primes found = {len(primes):<8} "
+        f"Time = {runtime:.6f} seconds"
+    )
